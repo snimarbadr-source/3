@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <base href="./">
+  <title>مقابلات الصحة — مستشفى ريسبكت</title>
+  <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
+  <link rel="stylesheet" href="./styles.css" />
+  <style>
+    /* Fallback if external CSS fails to load */
+    html,body{height:100%}
+    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Tahoma,Arial;background:#0b1220;color:#eaf2ff;direction:rtl}
+  </style>
+</head>
+<body>
+  <!-- INTRO SPLASH (auto hides after 4 seconds) -->
+  <div id="intro-splash" class="intro-splash" aria-hidden="true">
+    <div class="intro-bg"></div>
+    <div class="intro-wrap">
+      <div class="intro-card" role="presentation">
+        <div class="intro-brand">
+          <img class="intro-logo" src="./assets/intro-logo.png" alt="" />
+          <div class="intro-brand-text">
+            <div class="intro-title">مقابلات الصحة</div>
+            <div class="intro-sub">مستشفى ريسبكت</div>
+          </div>
+        </div>
+
+        <div class="intro-doc" aria-hidden="true">
+          <div class="doc-top">
+            <div class="doc-dot"></div>
+            <div class="doc-dot"></div>
+            <div class="doc-dot"></div>
+          </div>
+          <div class="doc-body">
+            <div class="doc-line w80"></div>
+            <div class="doc-line w60"></div>
+            <div class="doc-line w90"></div>
+            <div class="doc-line w55"></div>
+            <div class="doc-line w70"></div>
+            <div class="doc-line w85"></div>
+          </div>
+        </div>
+
+        <div class="intro-foot">مستند مقابلات</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SYSTEM BANNER (quota / lock messages) -->
+  <div id="system-banner" class="system-banner" style="display:none;"></div>
+
+  <!-- LOCK OVERLAY (hard limit reached) -->
+  <div id="lock-overlay" class="lock-overlay" style="display:none;" aria-hidden="true"></div>
+
+  <div id="app">
+    <!-- LOGIN -->
+    <section id="view-login" class="view active">
+      <div class="bg"></div>
+      <div class="login-card">
+        <div class="brand">
+          <div class="brand-icon" aria-hidden="true">
+            <img src="./assets/logo.svg" alt="">
+          </div>
+          <div class="brand-text">
+            <div class="brand-title">مقابلات الصحة</div>
+            <div class="brand-sub">مستشفى ريسبكت</div>
+          </div>
+        </div>
+
+        <form id="login-form" autocomplete="on">
+          <div class="field">
+            <label for="login-email">البريد الإلكتروني</label>
+            <input id="login-email" name="email" type="email" autocomplete="email" required />
+          </div>
+          <div class="field">
+            <label for="login-username">اسم المستخدم</label>
+            <input id="login-username" name="username" type="text" autocomplete="username" required />
+          </div>
+          <div class="field">
+            <label for="login-password">كلمة المرور</label>
+            <input id="login-password" name="password" type="password" autocomplete="current-password" required />
+          </div>
+          <button class="btn primary" type="submit" id="btn-login">تسجيل الدخول</button>
+          <div class="hint" id="login-hint"></div>
+        </form>
+      </div>
+    </section>
+
+    <!-- SHELL -->
+    <section id="view-shell" class="view">
+      <header class="topbar">
+        <div class="topbar-left">
+          <div class="user-pill">
+            <span class="dot" id="presence-dot" aria-hidden="true"></span>
+            <div class="user-pill-text">
+              <div class="u1" id="current-user-name">—</div>
+              <div class="u2" id="current-user-role">—</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topbar-center">
+          <div class="topbar-title">مقابلات الصحة</div>
+          <div class="topbar-sub">مستشفى ريسبكت</div>
+        </div>
+
+        <div class="topbar-right">
+          <button class="icon-btn" id="btn-open-menu" title="القائمة" aria-label="القائمة">
+            ☰
+          </button>
+          <div id="mini-online" class="mini-online" title="متصل الآن" style="display:none;" aria-hidden="true"></div>
+        </div>
+      </header>
+
+      <main class="main">
+        <aside class="sidebar" id="sidebar">
+          <button class="nav-btn" data-nav="dashboard">لوحة التحكم</button>
+          <button class="nav-btn" data-nav="interview">المقابلة</button>
+          <button class="nav-btn" data-nav="control" data-requires="admin">التحكم</button>
+          <button class="nav-btn" data-nav="admin" data-requires="admin">الإدارة</button>
+          <button class="nav-btn" data-nav="audit">مراقبة</button>
+          <button class="nav-btn" data-nav="online">المتصلين</button>
+          <button class="nav-btn danger" id="btn-logout">تسجيل خروج</button>
+        </aside>
+
+        <section class="content">
+
+          <!-- DASHBOARD -->
+          <div class="panel active" id="panel-dashboard">
+            <div class="panel-head">
+              <h2>لوحة التحكم</h2>
+              <p>واجهة بسيطة وسريعة لإدارة المرشحين والنتائج.</p>
+            </div>
+
+            <div class="grid-2">
+              <div class="card">
+                <div class="card-title">إحصائيات سريعة</div>
+                <div class="stats">
+                  <div class="stat">
+                    <div class="stat-label">عدد المرشحين</div>
+                    <div class="stat-val" id="stat-candidates">0</div>
+                  </div>
+                  <div class="stat">
+                    <div class="stat-label">قيد المراجعة</div>
+                    <div class="stat-val" id="stat-review">0</div>
+                  </div>
+                  <div class="stat">
+                    <div class="stat-label">مقبول</div>
+                    <div class="stat-val" id="stat-accepted">0</div>
+                  </div>
+                  <div class="stat">
+                    <div class="stat-label">مرفوض</div>
+                    <div class="stat-val" id="stat-rejected">0</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-title">بحث سريع</div>
+                <div class="field">
+                  <label for="quick-search">ابحث بالاسم أو الرقم الوطني</label>
+                  <input id="quick-search" type="text" placeholder="اكتب للبحث..." />
+                </div>
+                <div class="muted">النتائج تظهر في قسم المقابلة.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- INTERVIEW -->
+          <div class="panel" id="panel-interview">
+            <div class="panel-head">
+              <div>
+                <h2>المقابلة</h2>
+                <p>إضافة مرشح، إدخال إجابات، وتحديث الحالة.</p>
+              </div>
+              <div class="panel-actions">
+                <button class="btn primary" id="btn-fullscreen-interview">🎯 مقابلة جديدة (ملء الشاشة)</button>
+                <button class="btn primary" id="btn-add-candidate">+ إضافة مرشح</button>
+              </div>
+            </div>
+
+            <div class="toolbar">
+              <input id="candidate-search" type="text" placeholder="ابحث بالاسم أو الرقم الوطني..." />
+              <div class="spacer"></div>
+              <div class="sorter">
+                <label class="muted" for="candidates-sort" style="margin-inline-end:8px;">الترتيب</label>
+                <select id="candidates-sort" class="select tiny" aria-label="ترتيب المرشحين">
+                  <option value="newest">الأحدث أولاً</option>
+                  <option value="oldest">الأقدم أولاً</option>
+                </select>
+              </div>
+              <div class="pager">
+                <button class="btn tiny" id="btn-prev-page">السابق</button>
+                <span class="muted" id="page-indicator">1 / 1</span>
+                <button class="btn tiny" id="btn-next-page">التالي</button>
+                <input id="page-jump" class="page-jump" type="number" min="1" step="1" placeholder="صفحة" />
+                <button class="btn tiny" id="btn-go-page">اذهب</button>
+              </div>
+            </div>
+
+            <div id="candidates-grid" class="cards-grid"></div>
+            <div class="muted" id="candidates-empty" style="display:none;">لا يوجد مرشحين بعد.</div>
+            <div class="row" style="margin-top:12px; justify-content:center; gap:10px;">
+              <button class="btn" id="candidates-load-more">عرض المزيد</button>
+              <span class="muted" id="candidates-count"></span>
+            </div>
+          </div>
+
+          <!-- CONTROL -->
+          <div class="panel" id="panel-control">
+            <div class="panel-head">
+              <div>
+                <h2>التحكم</h2>
+                <p>إدارة أسئلة المقابلة (إضافة/تعديل/حذف) — للإدارة و Super Admin فقط.</p>
+              </div>
+              <div class="panel-actions">
+                <button class="btn" id="btn-link-summary">ربط</button>
+                <button class="btn primary" id="btn-add-question">+ إضافة سؤال</button>
+              </div>
+            </div>
+
+            <div id="questions-list" class="list"></div>
+          </div>
+
+          <!-- ADMIN -->
+          <div class="panel" id="panel-admin">
+            <div class="panel-head">
+              <div>
+                <h2>الإدارة</h2>
+                <p>إدارة المستخدمين (إضافة/تعديل/حذف) — للإدارة و Super Admin فقط.</p>
+              </div>
+              <div class="panel-actions">
+                <button class="btn primary" id="btn-add-user">+ إضافة مستخدم</button>
+              </div>
+            </div>
+
+            <div id="users-list" class="list"></div>
+          </div>
+
+          <!-- AUDIT -->
+          <div class="panel" id="panel-audit">
+            <div class="panel-head">
+              <div>
+                <h2>مراقبة</h2>
+                <p>سجل واضح للتغييرات — مباشر (آخر 200 حركة).</p>
+              </div>
+            </div>
+
+            <div class="audit-filters">
+              <select id="audit-filter" class="select">
+                <option value="all">الكل</option>
+                <option value="candidate">مرشحين</option>
+                <option value="question">أسئلة</option>
+                <option value="user">مستخدمين</option>
+                <option value="auth">دخول/خروج</option>
+              </select>
+              <div class="spacer"></div>
+              <div class="muted" id="presence-summary"></div>
+            </div>
+
+            <div id="audit-list" class="list"></div>
+          </div>
+
+          <!-- ONLINE -->
+          <div class="panel" id="panel-online">
+            <div class="panel-head">
+              <div>
+                <h2>المتصلين</h2>
+                <p>حالة المستخدمين (متصل/غير متصل) داخل الموقع.</p>
+              </div>
+            </div>
+            <div id="online-list" class="list"></div>
+          </div>
+
+        </section>
+      </main>
+    </section>
+
+    <!-- MODALS -->
+    <div id="modal-backdrop" class="modal-backdrop" style="display:none;">
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-head">
+          <div class="modal-title" id="modal-title">—</div>
+          <button class="icon-btn" id="modal-close" aria-label="إغلاق">✕</button>
+        </div>
+        <div class="modal-body" id="modal-body"></div>
+        <div class="modal-foot" id="modal-foot"></div>
+      </div>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast" class="toast" style="display:none;"></div>
+    <!-- CONFIRM (in-app) -->
+    <div id="confirm-backdrop" class="confirm-backdrop" style="display:none;" aria-hidden="true">
+      <div class="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+        <div class="confirm-title" id="confirm-title">تنبيه</div>
+        <div class="confirm-message" id="confirm-message">—</div>
+        <div class="confirm-actions">
+          <button class="btn ghost" id="confirm-cancel" type="button">إلغاء</button>
+          <button class="btn danger" id="confirm-ok" type="button">تأكيد</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <!-- Firebase (Firestore) -->
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+  <script defer src="./app.js"></script>
+</body>
+</html>
