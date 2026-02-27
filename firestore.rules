@@ -1,0 +1,78 @@
+// ===== DISABLE LOGIN SYSTEM =====
+// يعطّل نظام تسجيل الدخول تماماً
+
+(function() {
+  'use strict';
+
+  function disableLoginSystem() {
+    // 1. إزالة شاشة تسجيل الدخول من الـ DOM
+    const loginView = document.getElementById('view-login');
+    if (loginView) {
+      loginView.remove();
+    }
+
+    // 2. التأكد من أن الـ shell نشطة
+    const shellView = document.getElementById('view-shell');
+    if (shellView) {
+      shellView.classList.add('active');
+    }
+
+    // 3. تعطيل أي معالجات تسجيل دخول موجودة
+    const loginForm = document.getElementById('login-form');
+    if (loginForm) {
+      loginForm.onsubmit = (e) => {
+        e.preventDefault();
+        console.log('Login form disabled');
+      };
+    }
+
+    const loginBtn = document.getElementById('btn-login');
+    if (loginBtn) {
+      loginBtn.disabled = true;
+      loginBtn.style.opacity = '0.5';
+      loginBtn.onclick = (e) => e.preventDefault();
+    }
+
+    // 4. إزالة أي معالجات login من النافذة
+    if (window.handleLogin) {
+      window.handleLogin = () => {};
+    }
+
+    if (window.doLogin) {
+      window.doLogin = () => {};
+    }
+
+    // 5. تعيين مستخدم افتراضي (اختياري)
+    const userNameEl = document.getElementById('current-user-name');
+    const userRoleEl = document.getElementById('current-user-role');
+    
+    if (userNameEl) {
+      userNameEl.textContent = 'مستخدم النظام';
+    }
+    if (userRoleEl) {
+      userRoleEl.textContent = 'مسؤول';
+    }
+
+    console.log('✅ نظام تسجيل الدخول معطّل - التطبيق جاهز للاستخدام');
+  }
+
+  // عند تحميل DOM
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(disableLoginSystem, 100);
+    });
+  } else {
+    setTimeout(disableLoginSystem, 100);
+  }
+
+  // عطّل أي محاولة للعودة إلى شاشة التسجيل
+  window.goToLogin = () => {
+    console.log('⛔ تسجيل الدخول معطّل');
+    return false;
+  };
+
+  window.logout = () => {
+    console.log('⛔ تسجيل الخروج معطّل');
+    return false;
+  };
+})();
